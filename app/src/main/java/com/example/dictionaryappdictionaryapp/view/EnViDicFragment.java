@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ListView;
 
 import com.example.dictionaryappdictionaryapp.MainActivity;
@@ -36,6 +37,7 @@ public class EnViDicFragment extends Fragment {
     private Loading loading = Loading.getInstance();
     private WordAdapter wordAdapter;
     private ArrayList<WordAndDefinition> wordAndDefinitions;
+    private ArrayList<WordAndDefinition> wordAndDefinitionsOriginal;
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -61,7 +63,8 @@ public class EnViDicFragment extends Fragment {
         Log.d("EnViDicFragment", "isEnViDicLoaded: " + loading.isEnViDicLoaded());
 
         if (loading.isEnViDicLoaded()) {
-            wordAndDefinitions = loading.getWordAndDefinitionsEnVi();
+            wordAndDefinitionsOriginal = new ArrayList<>(loading.getWordAndDefinitionsEnVi());
+            wordAndDefinitions = new ArrayList<>(loading.getWordAndDefinitionsEnVi());
             Log.d("EnViDicFragment", "wordAndDefinitions size: " + wordAndDefinitions.size());
             wordAdapter = new WordAdapter(wordAndDefinitions, getContext());
             binding.rvEnViDic.setAdapter(wordAdapter);
@@ -71,23 +74,47 @@ public class EnViDicFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_search, menu);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_search, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                wordAndDefinitions.clear();
+                if (query.isEmpty()) {
+                    wordAndDefinitions.addAll(wordAndDefinitionsOriginal);
+                    return false;
+                }
+                for (WordAndDefinition wordAndDefinition : wordAndDefinitionsOriginal) {
+                    if (wordAndDefinition.getWord().toLowerCase().contains(query.toLowerCase())) {
+                        wordAndDefinitions.add(wordAndDefinition);
+                    }
+                }
+                wordAdapter.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+
+        });
 //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //            @Override
 //            public boolean onQueryTextSubmit(String query) {
-//                wordAdapter.getFilter().filter(query);
+//                Filter filter = wordAdapter.getFilter();
+//                filter.filter(query);
 //                return false;
 //            }
 //
 //            @Override
 //            public boolean onQueryTextChange(String newText) {
-//                wordAdapter.getFilter().filter(newText);
 //                return false;
 //            }
+//
 //        });
-//    }
+    }
 }

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.example.dictionaryappdictionaryapp.view.EnViDicFragment;
 import com.example.dictionaryappdictionaryapp.view.HomeFragment;
+import com.example.dictionaryappdictionaryapp.view.ViEnDicFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import com.example.dictionaryappdictionaryapp.R;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         } else if (item.getItemId() == R.id.nav_en_vi_dic) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EnViDicFragment()).commit();
+        } else if (item.getItemId() == R.id.nav_vi_en_dic) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViEnDicFragment()).commit();
         }
         drawerLayout.closeDrawers();
         return true;

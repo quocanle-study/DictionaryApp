@@ -43,8 +43,9 @@ dependencies {
     implementation("com.readystatesoftware.sqliteasset:sqliteassethelper:+")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
-    var paging_version = "3.0.1"
+    val paging_version = "3.2.1"
     implementation("androidx.paging:paging-runtime:$paging_version")
+    implementation("androidx.webkit:webkit:1.8.0")
     implementation("androidx.lifecycle:lifecycle-reactivestreams:2.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
